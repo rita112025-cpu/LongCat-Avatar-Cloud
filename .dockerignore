@@ -1,0 +1,10 @@
+.git
+.github
+data
+weights
+outputs
+_cache
+.venv
+__pycache__
+*.pyc
+notebooks

@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LongCat Studio: Talking Avatar Suite 1.5</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #ffffff;
+            --bg-surface: #f8f9fa;
+            --bg-surface-hover: #f1f3f5;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --border-focus: #000000;
+            
+            --color-text-primary: #0f1015;
+            --color-text-secondary: #5f6368;
+            --color-text-muted: #80868b;
+            
+            --primary: #000000;
+            --primary-hover: #212529;
+            --primary-glow: rgba(0, 0, 0, 0.03);
+            --success: #198754;
+            --danger: #dc3545;
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius-large: 24px;
+            --border-radius-medium: 12px;
+            --box-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.01);
+        }
+
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--color-text-primary);
+            font-family: var(--font-body);
+            line-height: 1.5;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 2.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.25rem 1.5rem;
+            }
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            padding-bottom: 1.25rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .logo-symbol {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000000;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-studio {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            background: var(--primary-glow);
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Title Area */
+        .studio-intro {
+            margin-bottom: 2rem;
+        }
+
+        .studio-intro h1 {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.7px;
+            margin-bottom: 0.4rem;
+            color: var(--color-text-primary);
+            line-height: 1.2;
+        }
+
+        .studio-intro p {
+            font-size: 0.95rem;
+            color: var(--color-text-secondary);
+            max-width: 800px;
+        }
+
+        /* Try-an-Example Visual Gallery Row */
+        .gallery-section {
+            margin-bottom: 2rem;
+        }
+
+        .gallery-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .example-preset-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-medium);
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: left;
+        }
+
+        .example-preset-card:hover {
+            background: var(--bg-surface-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .example-preset-card.active {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .preset-card-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+        }
+
+        .preset-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            overflow: hidden;
+        }
+
+        .preset-card-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .preset-card-subtitle {
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Reset Button Preset card */
+        .example-preset-card.reset-card {
+            justify-content: center;
+            background: #ffffff;
+            border-style: dashed;
+        }
+
+        .example-preset-card.reset-card:hover {
+            background: var(--bg-surface-hover);
+            border-style: solid;
+        }
+
+        .reset-card-icon {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 3.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+        }
+
+        /* Left Panel Controls */
+        .creator-side {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Unified Input Card matching reference image */
+        .input-card {
+            background: var(--bg-surface);
+            border-radius: var(--border-radius-large);
+            padding: 1.5rem;
+            position: relative;
+            transition: var(--transition-smooth);
+            margin-bottom: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            border: 1px solid transparent;
+        }
+
+        .input-card:focus-within {
+            background: #ffffff;
+            border-color: var(--border-color);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Upload Toolbar (Top Row Inside Card) */
+        .upload-toolbar {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-upload-trigger {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-medium);
+            padding: 0.45rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .btn-upload-trigger:hover {
+            background: var(--bg-surface-hover);
+            color: var(--color-text-primary);
+        }
+
+        .btn-upload-trigger input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Selected Media Chips Inside Card */
+        .media-chip {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-medium);
+            padding: 0.35rem 0.75rem 0.35rem 0.45rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 250px;
+            white-space: nowrap;
+            transition: var(--transition-smooth);
+        }
+
+        .media-chip-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .media-chip-icon {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+        }
+
+        .media-chip-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            font-family: var(--font-body);
+        }
+
+        .btn-remove-chip {
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0 0.1rem;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remove-chip:hover {
+            color: var(--danger);
+        }
+
+        /* Mini Audio Player Chip inside card */
+        .audio-player-chip {
+            max-width: 320px;
+        }
+
+        audio.custom-audio-player {
+            width: 120px;
+            height: 20px;
+            outline: none;
+            opacity: 0.85;
+            transition: var(--transition-smooth);
+        }
+
+        audio.custom-audio-player:hover {
+            opacity: 1;
+        }
+
+        /* Borderless prompt textarea */
+        .prompt-textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--color-text-primary);
+            resize: none;
+            min-height: 100px;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        .prompt-textarea::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        /* Bottom Status Footer Inside Card */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            padding-top: 1rem;
+        }
+
+        .active-config-indicator {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .active-config-indicator svg {
+            color: var(--color-text-muted);
+        }
+
+        /* Pure Black Solid Circular Launch Button matching reference image */
+        .btn-circular-launch {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-circular-launch:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .btn-circular-launch:active {
+            transform: scale(0.95);
+        }
+
+        .btn-circular-launch:disabled {
+            background: #e9ecef;
+            color: var(--color-text-muted);
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-circular-launch svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.25s ease;
+        }
+
+        .btn-circular-launch:hover:not(:disabled) svg {
+            transform: translateY(-2px);
+        }
+
+        /* Collapsible Parameter accordion sitting quietly below card */
+        .advanced-card {
+            background: transparent;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            padding: 0 0.5rem;
+        }
+
+        .advanced-header {
+            background: none;
+            border: none;
+            padding: 0.5rem 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition-smooth);
+        }
+
+        .advanced-header:hover {
+            color: var(--color-text-primary);
+        }
+
+        .chevron-icon {
+            font-size: 0.65rem;
+            transition: transform 0.2s ease;
+        }
+
+        .advanced-card.open .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .settings-tray {
+            display: none;
+            padding: 0.75rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: 0.25rem;
+        }
+
+        .settings-tray.open {
+            display: grid;
+        }
+
+        .settings-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .settings-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Premium Select Dropdowns */
+        .select-premium, .input-premium {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.4rem 0.5rem;
+            font-size: 0.75rem;
+            font-family: var(--font-body);
+            color: var(--color-text-primary);
+            outline: none;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .select-premium:focus, .input-premium:focus {
+            border-color: var(--border-focus);
+        }
+
+        /* Blocker Overlay for Preset Loading */
+        .preset-blocker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            border-radius: var(--border-radius-large);
+            backdrop-filter: blur(1.5px);
+        }
+
+        .preset-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(0, 0, 0, 0.05);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        /* Footer notice */
+        .legal-notice {
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            text-align: left;
+            padding-left: 0.5rem;
+        }
+
+        .legal-notice a {
+            color: var(--color-text-secondary);
+            text-decoration: underline;
+        }
+
+        .legal-notice a:hover {
+            color: var(--color-text-primary);
+        }
+
+        /* Right Panel: Render monitor area matching reference image */
+        .canvas-side {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .canvas-wrapper {
+            width: 100%;
+            background: var(--bg-surface);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 16 / 10;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow-card);
+            min-height: 420px;
+        }
+
+        @media (max-width: 640px) {
+            .canvas-wrapper {
+                aspect-ratio: 16 / 11;
+                min-height: 320px;
+            }
+        }
+
+        /* Monitor Idle Screen */
+        .canvas-idle-state {
+            text-align: center;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .canvas-idle-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .canvas-idle-desc {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            max-width: 300px;
+            line-height: 1.5;
+        }
+
+        /* Rendering Loading screen */
+        .canvas-loading-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 20;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .loading-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .loading-subtext {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 1.2rem;
+            max-width: 280px;
+        }
+
+        .progress-line-container {
+            width: 220px;
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 99px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
+        .loading-percent-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            background: var(--bg-surface-hover);
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.45rem;
+            border-radius: 6px;
+        }
+
+        /* Viewport Video Player */
+        .video-container {
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: relative;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            outline: none;
+            display: block;
+        }
+
+        /* Floating glass overlay buttons */
+        .canvas-overlay-btn {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            z-index: 10;
+            color: var(--color-text-primary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .canvas-overlay-btn:hover {
+            background: #ffffff;
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .overlay-mute-btn {
+            top: 1.25rem;
+            right: 1.25rem;
+        }
+
+        .overlay-download-btn {
+            bottom: 1.25rem;
+            right: 1.25rem;
+        }
+
+        .overlay-mute-btn svg, .overlay-download-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--border-radius-medium);
+            color: var(--color-text-primary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform: translateX(120%);
+        }
+
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--danger); }
+        .toast.info { border-left: 3px solid var(--primary); }
+
+        /* Keyframes */
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes slideDown {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <span class="logo-symbol"></span>
+                <span class="logo-text">LongCat Studio <span class="badge-studio">v1.5 Premium</span></span>
+            </div>
+            <div class="header-actions">
+                <a href="https://huggingface.co/blog/victor/building-zerogpu-spaces-autonomously" target="_blank" class="header-link">About Auto-Spaces</a>
+            </div>
+        </header>
+
+        <!-- Studio Intro Header -->
+        <div class="studio-intro">
+            <h1>LongCat Lip-Sync Studio</h1>
+            <p>Select a reference preset card below, or drop custom assets inside the studio generator card to animate talking video portraits.</p>
+        </div>
+
+        <!-- Try-an-Example Visual Gallery Row -->
+        <div class="gallery-section">
+            <span class="gallery-label">Try a Reference Example Preset:</span>
+            <div class="gallery-grid">
+                <!-- Photoreal Portrait -->
+                <div class="example-preset-card active" id="chip-photoreal" onclick="triggerLoadPreset('photoreal')">
+                    <img src="/assets/avatar/examples/photoreal_person.png" class="preset-card-thumb">
+                    <div class="preset-card-info">
+                        <span class="preset-card-title">Photoreal Portrait</span>
+                        <span class="preset-card-subtitle">Studio Portrait Voice</span>
+                    </div>
+                </div>
+
+                <!-- Cartoon Kid -->
+                <div class="example-preset-card" id="chip-cartoon" onclick="triggerLoadPreset('cartoon')">
+                    <img src="/assets/avatar/single/character.png" class="preset-card-thumb">
+                    <div class="preset-card-info">
+                        <span class="preset-card-title">Cartoon Kid</span>
+                        <span class="preset-card-subtitle">Studio Cartoon Voice</span>
+                    </div>
+                </div>
+
+                <!-- Orc Warrior -->
+                <div class="example-preset-card" id="chip-orc" onclick="triggerLoadPreset('orc')">
+                    <img src="/assets/avatar/examples/orc_warrior.png" class="preset-card-thumb">
+                    <div class="preset-card-info">
+                        <span class="preset-card-title">Orc Warrior</span>
+                        <span class="preset-card-subtitle">Studio Orc Voice</span>
+                    </div>
+                </div>
+
+                <!-- Custom/Reset card -->
+                <div class="example-preset-card reset-card" id="chip-none" onclick="clearPresetSelection()">
+                    <span class="reset-card-icon">✕</span>
+                    <div class="preset-card-info">
+                        <span class="preset-card-title">Reset Studio</span>
+                        <span class="preset-card-subtitle">Clear all inputs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Workspace split -->
+        <div class="workspace">
+            <!-- Left Panel: Controls Studio -->
+            <div class="creator-side">
+                <!-- Studio Input Card matching reference image -->
+                <div style="position: relative;">
+                    <!-- Loading Blocker for Presets -->
+                    <div class="preset-blocker" id="preset-loader">
+                        <div class="preset-spinner"></div>
+                    </div>
+
+                    <!-- Unified Input Card -->
+                    <div class="input-card" id="studio-input-card">
+                        <!-- Uploads Toolbar (Top Row Inside Card) -->
+                        <div class="upload-toolbar">
+                            <!-- Image trigger button -->
+                            <div class="btn-upload-trigger" id="img-upload-btn">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <span>Add portrait</span>
+                                <input type="file" id="image-file" accept="image/*">
+                            </div>
+
+                            <!-- Audio trigger button -->
+                            <div class="btn-upload-trigger" id="aud-upload-btn">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                <span>Add audio</span>
+                                <input type="file" id="audio-file" accept="audio/*">
+                            </div>
+
+                            <!-- Selected Image pill chip -->
+                            <div class="media-chip" id="img-chip" style="display:none;">
+                                <img src="" class="media-chip-thumb" id="img-chip-thumb">
+                                <span class="media-chip-name" id="img-chip-name">image.png</span>
+                                <button type="button" class="btn-remove-chip" onclick="clearFile('image')">×</button>
+                            </div>
+
+                            <!-- Selected Audio pill chip with integrated mini player -->
+                            <div class="media-chip audio-player-chip" id="aud-chip" style="display:none;">
+                                <span class="media-chip-icon">🔊</span>
+                                <span class="media-chip-name" id="aud-chip-name">audio.wav</span>
+                                <audio id="audio-preview-player" controls class="custom-audio-player"></audio>
+                                <button type="button" class="btn-remove-chip" onclick="clearFile('audio')">×</button>
+                            </div>
+                        </div>
+
+                        <!-- Borderless Performance Textarea prompt -->
+                        <textarea class="prompt-textarea" id="prompt-input" placeholder="Describe expressions or speech performance styling here..."></textarea>
+
+                        <!-- Bottom Action Footer Row inside card -->
+                        <div class="card-footer">
+                            <!-- Dynamic loaded voice label status -->
+                            <div class="active-config-indicator">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                <span id="config-status-label">Voice: Studio Portrait Voice</span>
+                            </div>
+
+                            <!-- Circular generate solid play-trigger button (matching reference pure-black) -->
+                            <button type="button" class="btn-circular-launch" id="btn-generate" onclick="generateAvatar()" title="Generate Lip-Synced Avatar">
+                                <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible advanced parameters accordion drawer below card -->
+                    <div class="advanced-card" id="advanced-card">
+                        <button type="button" class="advanced-header" onclick="toggleSettingsTray()">
+                            <span>⚙ Settings</span>
+                            <span class="chevron-icon" id="settings-chevron">▼</span>
+                        </button>
+                        <div class="settings-tray" id="settings-tray">
+                            <!-- Resolution -->
+                            <div class="settings-group">
+                                <label class="settings-label">Resolution</label>
+                                <select class="select-premium" id="sel-resolution">
+                                    <option value="480p" selected>480p (Standard)</option>
+                                    <option value="720p">720p (HD)</option>
+                                </select>
+                            </div>
+
+                            <!-- Preprocessing -->
+                            <div class="settings-group">
+                                <label class="settings-label">Preprocessing</label>
+                                <select class="select-premium" id="sel-vocal-mode">
+                                    <option value="Clean speech (fast)" selected>Clean speech (fast)</option>
+                                    <option value="Isolate vocals (quality)">Isolate vocals (quality)</option>
+                                </select>
+                            </div>
+
+                            <!-- Acceleration -->
+                            <div class="settings-group">
+                                <label class="settings-label">Acceleration</label>
+                                <select class="select-premium" id="sel-acceleration">
+                                    <option value="Exact 8-step">Exact 8-step</option>
+                                    <option value="DBCache fast">DBCache fast</option>
+                                    <option value="DBCache faster" selected>DBCache faster</option>
+                                </select>
+                            </div>
+
+                            <!-- Seed -->
+                            <div class="settings-group">
+                                <label class="settings-label">Seed</label>
+                                <input type="number" class="input-premium" id="seed-input" value="42" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer notice -->
+                <div class="legal-notice">
+                    Built autonomously across Hugging Face Spaces sessions. Learn more at <a href="https://huggingface.co/blog/victor/building-zerogpu-spaces-autonomously" target="_blank">Building ZeroGPU Spaces Autonomously</a>.
+                </div>
+            </div>
+
+            <!-- Right Panel: Viewport monitor area -->
+            <div class="canvas-side">
+                <div class="canvas-wrapper">
+                    <!-- Idle Viewport Screen -->
+                    <div class="canvas-idle-state" id="panel-idle">
+                        <div class="canvas-idle-title">Render preview canvas</div>
+                        <div class="canvas-idle-desc">Your generated talking avatar video will render here. Choose options and click the launch button.</div>
+                    </div>
+
+                    <!-- Rendering monitor Loading screen -->
+                    <div class="canvas-loading-state" id="panel-loading">
+                        <div class="loading-title" id="lbl-status">Initializing Render</div>
+                        <div class="loading-subtext" id="lbl-substatus">Connecting to synthesis engine...</div>
+                        <div class="progress-line-container">
+                            <div class="progress-line-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="loading-percent-badge" id="lbl-percent">0%</div>
+                    </div>
+
+                    <!-- Elegant Viewport Video Player container -->
+                    <div class="video-container" id="panel-video">
+                        <!-- Mute / Unmute Floating Overlay controls -->
+                        <button class="canvas-overlay-btn overlay-mute-btn" id="btn-mute-toggle" onclick="toggleMute()" title="Toggle Mute">
+                            <svg viewBox="0 0 24 24" id="icon-unmuted"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                            <svg viewBox="0 0 24 24" id="icon-muted" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                        </button>
+
+                        <!-- Download Floating Overlay Button -->
+                        <button class="canvas-overlay-btn overlay-download-btn" onclick="downloadVideo()" title="Download Output Video">
+                            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        </button>
+
+                        <video class="video-player" id="video-out" loop playsinline autoplay>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Grid container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Gradio Client Integration JS Logic -->
+    <script type="module">
+        import { Client, handle_file } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+
+        // Global studio state variables
+        let currentImageFile = null;
+        let currentAudioFile = null;
+        let activeGradioJob = null;
+        let currentOutputVideoUrl = null;
+
+        // Initialize file upload fields and drag & drop handlers
+        function setupFileFields() {
+            const imgInput = document.getElementById("image-file");
+            const audInput = document.getElementById("audio-file");
+            const dropCard = document.getElementById("studio-input-card");
+
+            imgInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (file) handleFileSelected(file, 'image');
+            });
+
+            audInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (file) handleFileSelected(file, 'audio');
+            });
+
+            // Drag and Drop Event listeners on the unified generation card!
+            setupDragAndDrop(dropCard);
+        }
+
+        // Drag and Drop implementation directly on the generation box card!
+        function setupDragAndDrop(card) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                card.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    card.style.borderColor = 'var(--border-focus)';
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                card.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    card.style.borderColor = 'transparent';
+                }, false);
+            });
+
+            card.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                for (let file of files) {
+                    if (file.type.startsWith('image/')) {
+                        handleFileSelected(file, 'image');
+                    } else if (file.type.startsWith('audio/')) {
+                        handleFileSelected(file, 'audio');
+                    } else {
+                        showToast("Unsupported file type dropped.", "error");
+                    }
+                }
+            }, false);
+        }
+
+        // Selected files formatting & validation
+        function handleFileSelected(file, fileType) {
+            if (fileType === 'image') {
+                if (!file.type.startsWith('image/')) {
+                    showToast("Please select a valid image file.", "error");
+                    return;
+                }
+                currentImageFile = file;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById("img-chip-thumb").src = e.target.result;
+                    document.getElementById("img-chip-name").textContent = file.name;
+                    document.getElementById("img-chip").style.display = "flex";
+                    document.getElementById("img-upload-btn").style.display = "none";
+                };
+                reader.readAsDataURL(file);
+                showToast("Reference face loaded.", "success");
+            } else if (fileType === 'audio') {
+                if (!file.type.startsWith('audio/')) {
+                    showToast("Please select a valid audio file.", "error");
+                    return;
+                }
+                currentAudioFile = file;
+
+                document.getElementById("aud-chip-name").textContent = file.name;
+                const audioPlayer = document.getElementById("audio-preview-player");
+                audioPlayer.src = URL.createObjectURL(file);
+                audioPlayer.load();
+
+                document.getElementById("aud-chip").style.display = "flex";
+                document.getElementById("aud-upload-btn").style.display = "none";
+                showToast("Driving audio track loaded.", "success");
+            }
+        }
+
+        // Clear files reset triggers
+        window.clearFile = function(fileType) {
+            if (fileType === 'image') {
+                currentImageFile = null;
+                document.getElementById("image-file").value = "";
+                document.getElementById("img-chip").style.display = "none";
+                document.getElementById("img-upload-btn").style.display = "flex";
+            } else if (fileType === 'audio') {
+                currentAudioFile = null;
+                document.getElementById("audio-file").value = "";
+                const audioPlayer = document.getElementById("audio-preview-player");
+                audioPlayer.src = "";
+                document.getElementById("aud-chip").style.display = "none";
+                document.getElementById("aud-upload-btn").style.display = "flex";
+            }
+            showToast(`${fileType === 'image' ? 'Image' : 'Audio'} input removed.`, "info");
+        }
+
+        // Toggle Settings Tray Accordion
+        window.toggleSettingsTray = function() {
+            const tray = document.getElementById("settings-tray");
+            const card = document.getElementById("advanced-card");
+            tray.classList.toggle("open");
+            card.classList.toggle("open");
+        }
+
+        // Preset templates assets directory
+        const PRESETS = {
+            cartoon: {
+                name: "Cartoon Character",
+                label: "Studio Cartoon Voice",
+                image: "/assets/avatar/single/character.png",
+                audio: "/assets/avatar/examples/audio/character_voice.wav",
+                prompt: "A friendly cartoon character speaking warmingly against a soft blue background, simple flat illustration style.",
+                seed: 42,
+                vocalMode: "Clean speech (fast)",
+                acceleration: "DBCache faster"
+            },
+            orc: {
+                name: "Fantasy Orc Warrior",
+                label: "Studio Orc Voice",
+                image: "/assets/avatar/examples/orc_warrior.png",
+                audio: "/assets/avatar/examples/audio/orc_warrior_voice.wav",
+                prompt: "A detailed fantasy orc warrior portrait speaking directly to the camera, cinematic lighting, Expressive facial expressions.",
+                seed: 77,
+                vocalMode: "Clean speech (fast)",
+                acceleration: "DBCache faster"
+            },
+            photoreal: {
+                name: "Photorealistic Portrait",
+                label: "Studio Portrait Voice",
+                image: "/assets/avatar/examples/photoreal_person.png",
+                audio: "/assets/avatar/examples/audio/photoreal_person_voice.wav",
+                prompt: "A photorealistic portrait facing the camera, mouth slightly open mid-sentence. Professional lighting, neutral backdrop, highly realistic lip sync.",
+                seed: 123,
+                vocalMode: "Clean speech (fast)",
+                acceleration: "DBCache faster"
+            }
+        };
+
+        // Load Preset assets asynchronously
+        window.triggerLoadPreset = async function(presetId) {
+            const preset = PRESETS[presetId];
+            if (!preset) return;
+
+            // Update active preset card outlines
+            const cards = document.querySelectorAll(".example-preset-card");
+            cards.forEach(c => c.classList.remove("active"));
+            
+            const activeCard = document.getElementById(`chip-${presetId}`);
+            if (activeCard) activeCard.classList.add("active");
+
+            // Display loading overlay
+            const loader = document.getElementById("preset-loader");
+            loader.style.display = "flex";
+
+            try {
+                // Fetch image asset file
+                const imgRes = await fetch(preset.image);
+                if (!imgRes.ok) throw new Error("Preset image retrieval failed");
+                const imgBlob = await imgRes.blob();
+                currentImageFile = new File([imgBlob], preset.image.split('/').pop(), { type: imgBlob.type || 'image/png' });
+                
+                document.getElementById("img-chip-thumb").src = URL.createObjectURL(imgBlob);
+                document.getElementById("img-chip-name").textContent = currentImageFile.name;
+                document.getElementById("img-chip").style.display = "flex";
+                document.getElementById("img-upload-btn").style.display = "none";
+
+                // Fetch audio asset file
+                const audRes = await fetch(preset.audio);
+                if (!audRes.ok) throw new Error("Preset audio retrieval failed");
+                const audBlob = await audRes.blob();
+                currentAudioFile = new File([audBlob], preset.audio.split('/').pop(), { type: audBlob.type || 'audio/wav' });
+                
+                document.getElementById("aud-chip-name").textContent = currentAudioFile.name;
+                const audioPlayer = document.getElementById("audio-preview-player");
+                audioPlayer.src = URL.createObjectURL(audBlob);
+                audioPlayer.load();
+
+                document.getElementById("aud-chip").style.display = "flex";
+                document.getElementById("aud-upload-btn").style.display = "none";
+
+                // Populate parameter forms
+                document.getElementById("prompt-input").value = preset.prompt;
+                document.getElementById("seed-input").value = preset.seed;
+                document.getElementById("sel-vocal-mode").value = preset.vocalMode;
+                document.getElementById("sel-acceleration").value = preset.acceleration;
+                
+                // Update bottom status voice label
+                document.getElementById("config-status-label").textContent = `Voice: ${preset.label}`;
+
+                showToast(`Preset "${preset.name}" loaded successfully.`, "success");
+            } catch (err) {
+                console.error("Error loading preset:", err);
+                showToast(`Failed to load preset assets. Make sure backend is running.`, "error");
+            } finally {
+                loader.style.display = "none";
+            }
+        }
+
+        // Full reset configuration
+        window.clearPresetSelection = function() {
+            const cards = document.querySelectorAll(".example-preset-card");
+            cards.forEach(c => c.classList.remove("active"));
+            document.getElementById("chip-none").classList.add("active");
+            
+            clearFile('image');
+            clearFile('audio');
+            document.getElementById("prompt-input").value = "";
+            document.getElementById("seed-input").value = "42";
+            document.getElementById("config-status-label").textContent = "Voice: Studio Portrait Voice";
+            
+            showToast("Inputs successfully reset.", "info");
+        }
+
+        // Playback Mute controls
+        window.toggleMute = function() {
+            const video = document.getElementById("video-out");
+            const iconUnmuted = document.getElementById("icon-unmuted");
+            const iconMuted = document.getElementById("icon-muted");
+            
+            if (video.muted) {
+                video.muted = false;
+                iconUnmuted.style.display = "block";
+                iconMuted.style.display = "none";
+                showToast("Audio playback enabled.", "info");
+            } else {
+                video.muted = true;
+                iconUnmuted.style.display = "none";
+                iconMuted.style.display = "block";
+                showToast("Audio playback muted.", "info");
+            }
+        }
+
+        // Gradio API connection and generation launch logic
+        window.generateAvatar = async function() {
+            if (!currentImageFile) {
+                showToast("Please add an avatar image portrait first.", "error");
+                return;
+            }
+            if (!currentAudioFile) {
+                showToast("Please add driving audio track first.", "error");
+                return;
+            }
+
+            const prompt = document.getElementById("prompt-input").value || "A portrait talking naturally.";
+            const resolution = document.getElementById("sel-resolution").value;
+            const vocalMode = document.getElementById("sel-vocal-mode").value;
+            const acceleration = document.getElementById("sel-acceleration").value;
+            const seed = parseFloat(document.getElementById("seed-input").value) || 42;
+
+            // UI view transitions: clear preview states and display rendering screens
+            document.getElementById("panel-idle").style.display = "none";
+            document.getElementById("panel-video").style.display = "none";
+            
+            const loadingPanel = document.getElementById("panel-loading");
+            loadingPanel.style.display = "flex";
+            
+            const btnLaunch = document.getElementById("btn-generate");
+            btnLaunch.disabled = true;
+
+            updateLoadingState("Connecting", "Initializing pipeline link...", 0);
+
+            try {
+                const client = await Client.connect(window.location.origin, { events: ["data", "status"] });
+                
+                const job = client.submit("/generate_avatar", {
+                    image_file: handle_file(currentImageFile),
+                    audio_file: handle_file(currentAudioFile),
+                    prompt: prompt,
+                    resolution: resolution,
+                    seed: seed,
+                    vocal_mode: vocalMode,
+                    acceleration: acceleration
+                });
+
+                activeGradioJob = job;
+
+                for await (const message of job) {
+                    console.log("Synthesizer Event:", message);
+                    
+                    if (message.type === "status") {
+                        const stage = message.status;
+                        if (stage === "pending") {
+                            const qPos = message.position !== undefined ? message.position + 1 : 1;
+                            const qSize = message.queue_size || 1;
+                            updateLoadingState(
+                                "Queued", 
+                                `Waiting. Position: ${qPos}/${qSize}`, 
+                                0
+                            );
+                        } else if (stage === "progress") {
+                            if (message.progress_data && message.progress_data.length > 0) {
+                                const prog = message.progress_data[0];
+                                const percent = prog.progress ? Math.round(prog.progress * 100) : 0;
+                                const statusText = prog.desc || "Running avatar models...";
+                                updateLoadingState(
+                                    "Rendering",
+                                    statusText,
+                                    percent
+                                );
+                            } else {
+                                updateLoadingState("Synthesizing", "Generating frames...", 50);
+                            }
+                        } else if (stage === "error") {
+                            handleRenderError(message.message || "Synthesis session crashed.");
+                        }
+                    } else if (message.type === "data") {
+                        if (message.data && message.data.length > 0) {
+                            const fileData = message.data[0];
+                            if (fileData && fileData.url) {
+                                handleRenderComplete(fileData.url);
+                            } else {
+                                handleRenderError("Rendered video file not returned.");
+                            }
+                        } else {
+                            handleRenderError("Synthesis data pipeline failed.");
+                        }
+                    }
+                }
+
+            } catch (err) {
+                console.error("Gradio API error:", err);
+                handleRenderError(err.message || "Synthesis link establishment failed.");
+            }
+        }
+
+        // Live loading status formatting
+        function updateLoadingState(status, substatus, percent) {
+            document.getElementById("lbl-status").textContent = status;
+            document.getElementById("lbl-substatus").textContent = substatus;
+            document.getElementById("lbl-percent").textContent = `${percent}%`;
+            document.getElementById("progress-fill").style.width = `${percent}%`;
+        }
+
+        // Successful completion handler
+        function handleRenderComplete(videoUrl) {
+            currentOutputVideoUrl = videoUrl;
+            
+            setTimeout(() => {
+                document.getElementById("panel-loading").style.display = "none";
+                const videoOutEl = document.getElementById("video-out");
+                videoOutEl.src = videoUrl;
+                videoOutEl.load();
+                document.getElementById("panel-video").style.display = "block";
+                
+                const btnLaunch = document.getElementById("btn-generate");
+                btnLaunch.disabled = false;
+
+                showToast("Talking avatar video synthesized.", "success");
+            }, 600);
+        }
+
+        // Inference session failure handler
+        function handleRenderError(errorMsg) {
+            document.getElementById("panel-loading").style.display = "none";
+            document.getElementById("panel-idle").style.display = "flex";
+            
+            const btnLaunch = document.getElementById("btn-generate");
+            btnLaunch.disabled = false;
+
+            showToast(errorMsg, "error");
+        }
+
+        // Download generated file trigger
+        window.downloadVideo = function() {
+            if (!currentOutputVideoUrl) return;
+            const link = document.createElement("a");
+            link.href = currentOutputVideoUrl;
+            link.download = `synthesized_avatar_${Date.now()}.mp4`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Video file download initialized.", "success");
+        }
+
+        // Global toast notification system
+        window.showToast = function(message, type = "info") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `toast ${type}`;
+            
+            let iconSymbol = "ℹ️";
+            if (type === "success") iconSymbol = "✓";
+            if (type === "error") iconSymbol = "⚠️";
+
+            toast.innerHTML = `<span>${iconSymbol}</span><span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.transform = "translateX(0)";
+            }, 10);
+
+            setTimeout(() => {
+                toast.style.transform = "translateX(120%)";
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Setup dropzones on window load
+        window.addEventListener("DOMContentLoaded", () => {
+            setupFileFields();
+            
+            // Automatically pre-load the Photoreal preset on launch to display initial preview
+            triggerLoadPreset('photoreal');
+        });
+    </script>
+</body>
+</html>

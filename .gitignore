@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+_cache/
+outputs/
+weights/
+data/
+.gradio/
+.venv/
+.env

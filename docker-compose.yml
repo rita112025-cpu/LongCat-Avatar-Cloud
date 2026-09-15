@@ -1,0 +1,19 @@
+services:
+  longcat-avatar:
+    build: .
+    image: longcat-avatar-cloud:latest
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./data:/data
+    environment:
+      - HF_TOKEN=${HF_TOKEN:-}
+    shm_size: "16gb"
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
