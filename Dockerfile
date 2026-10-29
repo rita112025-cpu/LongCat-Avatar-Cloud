@@ -7,8 +7,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     GRADIO_SERVER_NAME=0.0.0.0 \
     GRADIO_SERVER_PORT=7860
 
+# build-essential: diffq (pulled in by audio-separator) only ships wheels up
+# to cp310, so pip builds it from source and needs a C compiler (gcc).
+# Kept in the final image on purpose: Triton / torch.compile may call gcc at
+# runtime, so removing it after pip install is not safe.
+# Python headers come with the base image's conda Python, so no python3-dev.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ffmpeg libsndfile1 \
+    && apt-get install -y --no-install-recommends ffmpeg libsndfile1 build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
